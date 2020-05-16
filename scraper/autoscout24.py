@@ -3,6 +3,7 @@ import scrapy
 import logging
 import re
 import datetime
+import time
 
 
 def get_search_page(min_price, max_price,
@@ -142,6 +143,8 @@ class Autoscout24Spider(scrapy.Spider):
     def parse_vehicle(self, response):
         km, matriculation = get_km_and_matriculation(response)
         fuel, euroclass = get_fuel_and_euroclass(response)
+        timestamp = time.strftime("%Y-%m-%dT%H:%M:%SZ",
+                                  time.gmtime(time.time()))
 
         yield {
             "title": get_title(response),
@@ -157,6 +160,7 @@ class Autoscout24Spider(scrapy.Spider):
             "hp": get_hp(response),
             "uuid": get_uuid(response),
             "url": response.url,
+            "timestamp": timestamp,
         }
 
     def parse(self, response):
