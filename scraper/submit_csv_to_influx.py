@@ -1,4 +1,4 @@
-#!/usr/bin/env python
+#!/usr/bin/env python3
 from influxdb import InfluxDBClient
 import pandas as pd
 import argparse
@@ -49,8 +49,8 @@ if __name__ == "__main__":
     parser = argparse.ArgumentParser()
     parser.add_argument("csv_file")
     parser.add_argument("db_addr")
-    parser.add_argument("-u", required=True)
-    parser.add_argument("-p", required=True)
+    parser.add_argument("-u", required=False)
+    parser.add_argument("-p", required=False)
 
     args = parser.parse_args()
 

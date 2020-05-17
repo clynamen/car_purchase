@@ -1,0 +1,25 @@
+version: '3'
+services:
+  influxdb:
+    ports:
+      - "127.0.0.1:8086:8086"
+    image:
+      influxdb
+    volumes:
+      - /var/lib/influxdb_autoscout:/var/lib/influxdb
+    networks:
+          influxdb:
+  autoscout_scraper:
+    depends_on:
+      - "influxdb"
+    command: bash -c "
+      cd /scraper/ && rm -f autoscout.csv && wait-for-it -t 5 influxdb:8086 -- echo \"start\"
+      && scrapy runspider autoscout24.py -o autoscout.csv
+      && ./submit_csv_to_influx.py autoscout.csv influxdb:8086
+      "
+    image: autoscout_scraper
+    networks:
+          influxdb:
+
+networks:
+  influxdb:
